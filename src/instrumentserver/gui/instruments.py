@@ -304,6 +304,10 @@ class ParameterDelegate(DelegateBase):
         This is the function that is supposed to create the widget. It should return it.
         """
         item = self.getItem(index)
+
+        if not item.showDelegate:  # type: ignore[attr-defined]
+            return None  # type: ignore[return-value]
+
         element = item.element  # type: ignore[attr-defined]
 
         ret = ParameterWidget(element, widget)
@@ -608,6 +612,8 @@ class InstrumentParameters(InstrumentDisplayBase):
             lambda w: (
                 w.paramWidget.input.setFocus()
                 if isinstance(w.paramWidget, AnyInput)
+                else None
+                if isinstance(w.paramWidget, QtWidgets.QLabel)
                 else w.paramWidget.setFocus()
             )
         )
@@ -642,6 +648,10 @@ class ParameterDeleteDelegate(ParameterDelegate):
         index: QtCore.QModelIndex,
     ) -> QtWidgets.QWidget:
         item = self.getItem(index)
+
+        if not item.showDelegate:  # type: ignore[attr-defined]
+            return None  # type: ignore[return-value]
+
         element = item.element  # type: ignore[attr-defined]
         rw = self.makeRemoveWidget(item.name, widget)  # type: ignore[attr-defined]
 
@@ -891,6 +901,10 @@ class MethodsDelegate(DelegateBase):
         index: QtCore.QModelIndex,
     ) -> QtWidgets.QWidget:
         item = self.getItem(index)
+
+        if not item.showDelegate:  # type: ignore[attr-defined]
+            return None  # type: ignore[return-value]
+
         element = item.element  # type: ignore[attr-defined]
         ret = MethodDisplay(element, item.name, parent=widget)  # type: ignore[attr-defined]
 
